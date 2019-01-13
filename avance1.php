@@ -1,3 +1,6 @@
+<?php
+    declare(encoding='UTF-8');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,14 +11,45 @@
 </head>
 <body>
 
-
+    
     <?php
         ini_set('max_execution_time', 240);
         require 'simple_html_dom.php';
-        //Codigo del analisis a Computrabajo
-        //Hay que poner una variable para el empleo a buscar, aqui por defecto le puse contador. 
-        $html = file_get_html('https://www.computrabajo.com.ec/ofertas-de-trabajo/?q=programador'); 
+        $tag = "month";
+        //$html = file_get_html('https://es.stackoverflow.com/?tags='.$tag); //lenguajes
+        $html = file_get_html('https://es.stackoverflow.com/?tab='.$tag); //tabs
 
+        $respuestas = $html->find('div[class=question-summary]');
+
+        $nombre_archivo= $tag.'.csv';
+        $archivo = fopen($nombre_archivo, "a");
+
+        foreach($respuestas as $res) {
+            $summary = $res->find('div[class=summary]',0);
+            $titulo = $summary->find('h3',0);
+            echo $titulo->plaintext; 
+
+            $cp = $res->find('div[class=cp]',0);
+            $votes = $cp->children(0)->children(0);
+            $respuestas =  $cp->children(1)->children(0);
+            $vistas =  $cp->children(2)->children(0);
+            echo $votes->outertext;
+            echo $respuestas->outertext;
+            echo $vistas->outertext;
+            
+            
+            $tituloutf = preg_replace_callback("/(&#[0-9]+;)/", function($m) { return mb_convert_encoding($m[1], "ISO-8859-1", "HTML-ENTITIES"); }, $titulo->plaintext);
+            $titsincoma = str_replace(",",";",$tituloutf);
+            $texto = $titsincoma . ','. $votes->plaintext.','.$respuestas->plaintext.','.$vistas->plaintext ."\r\n";
+
+            fwrite($archivo,$texto);
+         
+        }
+
+        fclose($archivo);
+
+
+        /*
         $container = $html->find('div[id=MainContainer]',0);
         $parrilla = $container->find('section[class=parrilla_oferta]',0);
         $ofertas = $parrilla->find('div[class=gO]',0);
@@ -54,16 +88,13 @@
             echo $localizacion->outertext;
             echo $jornada->outertext;
             echo $tipo->outertext;
-            echo $salario->outertext;
+            echo $salario->outertext;*/
 
-        }           
+        //}           
 
-       fclose($archivo);
+       //fclose($archivo);
 
     ?>
 
-
-
-    
 </body>
 </html>
