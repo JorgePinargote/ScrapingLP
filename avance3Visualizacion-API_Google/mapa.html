@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      /* Set the size of the div element that contains the map */
+      #map {
+        height: 400px;  /* The height is 400 pixels */
+        width: 100%;  /* The width is the width of the web page */
+       }
+    </style>
+  </head>
+  <body>
+    <h3>My Google Maps Demo</h3>
+    <!--The div element for the map -->
+    <div id="map"></div>
+    <script type="text/javascript">
+      var allText =[];
+      var allTextLines = [];
+      var Lines = [];
+
+      var txtFile = new XMLHttpRequest();
+      txtFile.open("GET", "file://d:/data.txt", true);
+      txtFile.onreadystatechange = function()
+        {
+            allText = txtFile.responseText;
+            allTextLines = allText.split(/\r\n|\n/);
+        };
+
+      document.write(allTextLines);<br>
+      document.write(allText);<br>
+      document.write(txtFile);<br>
+    </script>
+
+    <script>
+      // Initialize and add the map
+      function initMap() {
+      // The location of guayaquil
+      var guayaquil = {lat: -2.1961601, lng: -79.8862076};
+      // The map, centered at guayaquil
+      var map = new google.maps.Map(
+          document.getElementById('map'), {zoom: 4, center: guayaquil});
+      // The marker, positioned at guayaquil
+      var marker = new google.maps.Marker({position: guayaquil, map: map});
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC92qUVqGRPi4ZnkBDtQnCDs9DNdbD0Evg&callback=initMap">
+    </script>
+  </body>
+</html>
