@@ -13,34 +13,57 @@
     <h3>My Google Maps Demo</h3>
     <!--The div element for the map -->
     <div id="map"></div>
-    <script type="text/javascript">
-      var allText =[];
-      var allTextLines = [];
-      var Lines = [];
-
-      var txtFile = new XMLHttpRequest();
-      txtFile.open("GET", "file://d:/data.txt", true);
-      txtFile.onreadystatechange = function()
-        {
-            allText = txtFile.responseText;
-            allTextLines = allText.split(/\r\n|\n/);
-        };
-
-      document.write(allTextLines);<br>
-      document.write(allText);<br>
-      document.write(txtFile);<br>
-    </script>
 
     <script>
       // Initialize and add the map
-      function initMap() {
+      function initMap() {      
+      // the locations of all provinces
+      var locations = [
+      ["Guayaquil", -2.1961601, -79.8862076, 10],
+      ["Quito",   -0.22985, -78.5249481, 10],
+      ["Cuenca", -2.9005499, -79.0045319, 10],
+      ["Santo Domingo de los Colorados", -0.25305, -79.1753616, 10],
+      ["Machala", -3.25861, -79.9605331, 10],
+      ["Manta",   -0.96212, -80.7127075, 10],
+      ["Portoviejo",  -1.05458, -80.4544525, 10],
+      ["Eloy Alfaro", -2.1757901, -79.8551865, 10],
+      ["Esmeraldas",  0.9592, -79.6539688, 10],
+      ["Ambato",  -1.2490799, -78.6167526, 10],
+      ["Ibarra",  0.35171, -78.1223297, 10],
+      ["Riobamba",  -1.67098, -78.6471176, 10],
+      ["Loja",  -3.99313, -79.2042236, 10],
+      ["Tulcan",  0.81187, -77.7172699, 10],
+      ["Babahoyo", -1.80217, -79.5344315, 10],
+      ["La Libertad",   -2.233, -80.9103928, 10],
+      ["Latacunga",   -0.93521, -78.6155396, 10]
+      ]
+
       // The location of guayaquil
       var guayaquil = {lat: -2.1961601, lng: -79.8862076};
+
       // The map, centered at guayaquil
       var map = new google.maps.Map(
           document.getElementById('map'), {zoom: 4, center: guayaquil});
       // The marker, positioned at guayaquil
       var marker = new google.maps.Marker({position: guayaquil, map: map});
+      
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+
+    for (i = 0; i < locations.length; i++) {  
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0] + ": "+locations[i][3]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
       }
     </script>
     <script async defer
