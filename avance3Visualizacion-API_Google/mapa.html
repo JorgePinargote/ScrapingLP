@@ -1,17 +1,80 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <style>
       /* Set the size of the div element that contains the map */
+      body{
+        margin:0 auto;
+        padding:0px;
+      }
+
       #map {
-        height: 400px;  /* The height is 400 pixels */
+        height:100vh; /* The height is 400 pixels */
         width: 100%;  /* The width is the width of the web page */
        }
+
+       .header{
+         background-color: black;
+         color: white;
+         height: 60px;
+         width:25%;
+         font-family: monospace;
+         font-size: 15pt;
+	       top: 9%;
+         left: 0.5%;
+	       position: fixed;
+         z-index: 1000;
+         opacity: 0.7;
+       }
+       .integrantes{
+          position: fixed;
+          z-index: 1000;
+          opacity: 0.7;
+          top: 18%;
+          left: 0.5%;
+          width:25%;
+          background-color: white;
+          font-family: monospace;
+       }
+
+       .inter{
+         width:85%;
+         font-size: 12pt;
+         padding: 12px;
+       }
+
+       .header h3{
+         margin-top: 15px;
+         margin-left: 10px;
+       }
+
+
+
+
     </style>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   </head>
   <body>
-    <h3>My Google Maps Demo</h3>
+    <div class="header">
+      <h3>Lenguajes de programación</h3>
+    </div>
+    <div class="integrantes">
+      <div class="inter">
+        <h3>Descripción del proyecto</h3>
+        <p>Este mapa muestra la cantidad de trabajos disponibles de determinada profesión en las diferentes provincias del Ecuador.</p>
+        <p>El proyecto consiste en tres fases: </p>
+        <ul>
+          <li> En la primera usamos php y realizamos un scraping de dos sitios webs que ofrecen trabajos.</li>
+          <li> En la segunda fase limpiamos los datos, con ayuda de python los estandarizamos y dejamos listos para ser leidos.</li>
+          <li> Finalmente leemos los datos con javascript y desplegamos el mapa.</li>
+        </ul>
+
+      </div>
+
+
+    </div>
+
     <!--The div element for the map -->
     <div id="map"></div>
 
