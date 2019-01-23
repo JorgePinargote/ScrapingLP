@@ -1,19 +1,37 @@
 # Set Working Directory
-setwd("../../CltControl/Desktop/lenguajes/avance3Visualizacion-API_Google");
+#setwd("../../CltControl/Desktop/lenguajes/avance3Visualizacion-API_Google");
+#setwd("../Desktop/Programming Languages/lenguajes/avance2Pre-Procesamiento")
+setwd("../Desktop/Programming Languages/lenguajes/avance3Visualizacion-API_Google")
+
 
 # Read from csv file
-ofertas <- read.csv2("pre-processing.csv", sep = ",", header = FALSE)
+empresa <- read.csv2("ofertas_por_empresa.csv", sep = ",", header = FALSE)
+horario <- read.csv2("ofertas_por_horario.csv", sep = ",", header = FALSE)
 
 # Convert to a dataframe and add column names
-ofertas <- data.frame(ofertas)
-colnames(ofertas) <- c("Provincia", "n_ofertas")
+colnames(empresa) <- c("nombre", "n_ofertas")
+colnames(horario) <- c("empresa", "n_ofertas")
 
 # Ordeno ascendentemente el dataset y le digo que prevalezca el orden al graficar
-ofertas <- ofertas[order(ofertas$n_ofertas, decreasing = TRUE),]
-ofertas$Provincia <- factor(ofertas$Provincia, levels = ofertas$Provincia)
+empresa <- empresa[order(empresa$n_ofertas, decreasing = TRUE),]
+empresa$nombre <- factor(empresa$nombre, levels = empresa$nombre)
 
+# Importo la liberia para graficar
+library("ggplot2")
+
+# Inicializo el dispositivo grafico para svg
+svg(filename="Rplot%03d.svg", width=7, height=7, pointsize=12)
 # Grafico el barplot
-ggplot(ofertas, aes(x=Provincia, y=n_ofertas)) + geom_bar(stat = "identity")
+ggplot(empresa, aes(x=nombre, y=n_ofertas)) + geom_bar(stat = "identity", position = "stack") + theme(axis.text.x = element_text(angle = 90, hjust = 1))
 
 # Grafico de pastel
-pie(ofertas$n_ofertas, labels = ofertas$Provincia, main="Pie Chart of Jobs")
+pie(horario$n_ofertas, labels = horario$empresa, main="Pie Chart of Job Schedules")
+
+dev.off()
+
+ggplot(empresa, aes(x=nombre, y=n_ofertas, fill=nombre)) + 
+  geom_bar(stat = "identity", position = "stack") + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) + 
+  theme(plot.title = element_text(size = rel(2)) )+
+  labs(x = NULL, y = "Number of Available Jobs in units",
+       fill = NULL)  
