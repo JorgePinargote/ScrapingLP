@@ -7,14 +7,14 @@
     <title>Document</title>
 </head>
 <body>    
-	<h1>Scraping OK!</h1>
+	<label>Scraping OK!</label>
     <?php
         ini_set('max_execution_time', 240);
         require 'simple_html_dom.php';
         //Codigo del analisis a Computrabajo
         //Hay que poner una variable para el empleo a buscar, aqui por defecto le puse contador. 
         
-        $html = file_get_html('https://www.computrabajo.com.ec/ofertas-de-trabajo/?q=programador'); 
+        $html = file_get_html('https://www.computrabajo.com.ec/ofertas-de-trabajo/?q=arquitecto'); 
         $oferta1div = $html->find('div[class=bRS]');
         
         $nombre_archivo='computrabajo.csv';

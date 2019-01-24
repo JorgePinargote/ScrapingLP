@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <style>
+      /* Set the size of the div element that contains the map */
+      body{
+        margin:0 auto;
+        padding:0px;
+      }
+
+      #map {
+        height:100vh; /* The height is 400 pixels */
+        width: 100%;  /* The width is the width of the web page */
+       }
+
+       .header{
+         background-color: black;
+         color: white;
+         height: 60px;
+         width:25%;
+         font-family: monospace;
+         font-size: 15pt;
+	       top: 9%;
+         left: 0.5%;
+	       position: fixed;
+         z-index: 1000;
+         opacity: 0.7;
+       }
+       .integrantes{
+          position: fixed;
+          z-index: 1000;
+          opacity: 0.7;
+          top: 18%;
+          left: 0.5%;
+          width:25%;
+          background-color: white;
+          font-family: monospace;
+       }
+
+       .inter{
+         width:85%;
+         font-size: 12pt;
+         padding: 12px;
+       }
+
+       .header h3{
+         margin-top: 15px;
+         margin-left: 10px;
+       }
+
+
+
+
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  </head>
+  <body>
+    <div class="header">
+      <h3>Lenguajes de programación</h3>
+    </div>
+    <div class="integrantes">
+      <div class="inter">
+        <h3>Descripción del proyecto</h3>
+        <p>Este mapa muestra la cantidad de trabajos disponibles de determinada profesión en las diferentes provincias del Ecuador.</p>
+        <p>El proyecto consiste en tres fases: </p>
+        <ul>
+          <li> En la primera usamos php y realizamos un scraping de dos sitios webs que ofrecen trabajos.</li>
+          <li> En la segunda fase limpiamos los datos, con ayuda de python los estandarizamos y dejamos listos para ser leidos.</li>
+          <li> Finalmente leemos los datos con javascript y desplegamos el mapa.</li>
+        </ul>
+        
+        <form action="./imagenes.html" method="get">
+          <input type="submit" value="Ver imagenes" 
+            name="Submit" id="frm1_submit" />
+        </form>
+
+      </div>
+
+
+    </div>
+
+    <!--The div element for the map -->
+    <div id="map"></div>
+
+    <script>
+      // Initialize and add the map
+      function initMap() {
+      // the locations of all provinces locations
+      var provincias = [
+      ["Guayas", -2.1961601, -79.8862076, 10,0],
+      ["Pichincha",   -0.22985, -78.5249481, 10,1],
+      ["Azuay", -2.9005499, -79.0045319, 10,2],
+      ["El Oro", -3.25861, -79.9605331, 10,3],
+      ["Manabi",   -0.96212, -80.7127075, 10,4],
+      ["Esmeraldas",  0.9592, -79.6539688, 10,5],
+      ["Tungurahua",  -1.2490799, -78.6167526, 10,6],
+      ["Imbabura",  0.35171, -78.1223297, 10,7],
+      ["Chimborazo",  -1.67098, -78.6471176, 10,8],
+      ["Loja",  -3.99313, -79.2042236, 10,9],
+      ["Carchi",  0.81187, -77.7172699, 10,10],
+      ["Los Rios", -1.80217, -79.5344315, 10,11],
+      ["Santa Elena",   -2.233, -80.9103928, 10,12],
+      ["Cotopaxi",   -0.93521, -78.6155396, 10,13],
+      ["Orellana",   -0.793054, -76.428525, 10,14],
+      ["Bolivar",   -1.571382, -79.117128, 10,15],
+      ["Cañar",   -2.521370, -79.035295, 10,16],
+      ["Galapagos",   -0.413734, -91.098338, 10,17],
+      ["Morona Santiago",   -2.521370, -78.076392, 10,18],
+      ["Napo",   -0.665364, -77.991095, 10,19],
+      ["Pastaza",   -1.705680, -76.921153, 10,20],
+      ["Santo Domingo",   -0.219618, -79.228893, 10,21],
+      ["Sucumbios",   -0.025273, -76.584880, 10,22],
+      ["Zamora",   -4.218698, -78.910338, 10,23]
+
+      ]
+
+
+      function selectProvince(prov){
+        for (var j=0; j < provincias.length; j++) {
+            if(prov == provincias[j][4]){
+              return provincias[j];
+            }
+        }
+      }
+
+      /*LEYENDO CSV*/
+      $(document).ready(function() {
+        $.ajax({
+        type: "GET",
+        url: "ofertas_por_provincia.csv",
+        dataType: "text",
+        success: function(data) {processData(data);}
+        });
+      });
+
+      function processData(allText) {
+        var locations = [];
+        var allTextLines = allText.split(/\r\n|\n/);
+        for (var i=0; i<allTextLines.length; i++) {
+            var data = allTextLines[i].split(',');
+            selected = selectProvince(data[2]);
+              if(!(typeof selected === 'undefined')){
+                selected[3] = data[1];
+                locations.push(selected);
+              }
+
+        }
+
+        // The location of guayaquil
+        var guayaquil = {lat: -2.1961601, lng: -79.8862076};
+
+        // The map, centered at guayaquil
+        var map = new google.maps.Map(
+            document.getElementById('map'), {zoom: 4, center: guayaquil});
+        // The marker, positioned at guayaquil
+        var marker = new google.maps.Marker({position: guayaquil, map: map});
+
+      var infowindow = new google.maps.InfoWindow();
+
+      var marker, i;
+
+
+      for (i = 0; i < locations.length; i++) {
+
+        marker = new google.maps.Marker({
+          position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+          map: map
+        });
+
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+          return function() {
+            infowindow.setContent(locations[i][0] + ": "+locations[i][3]);
+            infowindow.open(map, marker);
+          }
+        })(marker, i));
+      }
+        }
+
+      }
+    </script>    
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC92qUVqGRPi4ZnkBDtQnCDs9DNdbD0Evg&callback=initMap">
+    </script>    
+  </body>
+</html>

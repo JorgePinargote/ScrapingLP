@@ -1,6 +1,6 @@
 import os
 coding = "utf-8"
-# Recibe la lista de nombre de archivos y retorna el una lista con las provincias de cada oferta
+# Seteo la lista de provincias del ecuador con sus indices, que me serviran para identificarlas en la visualizacion
 provincias = [
       ["Guayas",0],
       ["Pichincha",1],
@@ -28,12 +28,13 @@ provincias = [
       ["Zamora",23]
       ]
 
+# Obtengo una lista de tuplas con todas las ofertas
 def toListaTuplas(l_filenames):
     lt_ofertas = []
     for filename in l_filenames:
-        file = open(filename, "r+")
+        file = open(filename, errors = 'ignore')
         cont = 0
-        for line in file:
+        for line in file:                    
             line = line.strip().split(",")
             try:
                 puesto = line[0].strip()
@@ -49,6 +50,7 @@ def toListaTuplas(l_filenames):
                 continue
     return lt_ofertas
 
+# Obtengo todos los horarios sin repetir
 def obtenerHorarios(lt_ofertas):
     l_horarios = []
     for i in range(len(lt_ofertas)):
@@ -57,6 +59,7 @@ def obtenerHorarios(lt_ofertas):
             l_horarios.append(horario)
     return l_horarios
 
+# Obtengo todas las empresas sin repetir
 def obtenerEmpresas(lt_ofertas):
     l_empresas = []
     for i in range(len(lt_ofertas)):
@@ -65,6 +68,7 @@ def obtenerEmpresas(lt_ofertas):
             l_empresas.append(empresa)
     return l_empresas
 
+# Obtengo todas las provincias sin repetir
 def obtenerProvincias(lt_ofertas):
     l_provincias = []
     for i in range(len(lt_ofertas)):
@@ -73,6 +77,7 @@ def obtenerProvincias(lt_ofertas):
             l_provincias.append(provincia)
     return l_provincias
 
+# Obtengo el numero total de ofertas por provincia
 def ofertasPorProvincia(lt_ofertas, l_provincias, provincias):
     file = open("ofertas_por_provincia.csv", "w+")
     lt_ofertas_provincia = []
@@ -95,6 +100,7 @@ def ofertasPorProvincia(lt_ofertas, l_provincias, provincias):
         file.write(line)
     return lt_ofertas_provincia
 
+# Obtengo el numero total de ofertas por empresa
 def ofertasPorEmpresa(lt_ofertas, l_empresas):
     file = open("ofertas_por_empresa.csv", "w+")
     lt_ofertas_empresa = []
@@ -108,6 +114,7 @@ def ofertasPorEmpresa(lt_ofertas, l_empresas):
         file.write(line)
     return lt_ofertas_empresa
 
+# Obtengo el numero total de ofertas por horario
 def ofertasPorHorario(lt_ofertas, l_horarios):
     file = open("ofertas_por_horario.csv", "w+")
     lt_ofertas_horario = []
@@ -121,7 +128,7 @@ def ofertasPorHorario(lt_ofertas, l_horarios):
         file.write(line)    
     return lt_ofertas_horario
 
-
+# Obtengo todos los archivos csvs del directorio actual
 def obtenerFilenames():
     l_filenames = []
     files = [f for f in os.listdir('./') if os.path.isfile(f)]
