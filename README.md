@@ -1,4 +1,4 @@
-# lenguajes de Programacion 
+# Scraping Lenguajes de programacion requeridos.  
 Se realizó un proyecto que hace Web scraping a plataformas que ofertan trabajos en el area que se ingrese, luego se une dicha informacion y se la analiza para obtener graficas descriptivas. 
 
 Lenguajes Usados
